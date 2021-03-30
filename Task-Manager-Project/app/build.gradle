@@ -10,7 +10,46 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '4.6.1'
+    id 'io.freefair.lombok' version '5.3.0'//may have issues & need to remove
+    id "com.github.hierynomus.license" version "0.15.0"
+
 }
+
+jacoco{
+    toolVersion = "0.8.6"
+    reportsDirectory = file("$buildDir/jacoco")
+    //lombok.addLombokGeneratedAnnotation = true
+}
+
+test{
+    //report is generated after test runs
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport{
+    // tests are required to run first
+    dependsOn test
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.85
+            }
+        }
+    }
+}
+
 
 repositories {
     // Use JCenter for resolving dependencies.
@@ -28,6 +67,9 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
 
     compile'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    spotbugs 'com.github.spotbugs:spotbugs:4.2.1'
 }
 
 application {
