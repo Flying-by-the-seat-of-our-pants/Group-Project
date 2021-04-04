@@ -1,27 +1,35 @@
+/*
+ * Name: Dave McDonald
+ * Task Manager Project
+ * Course: CS2263 (Spring 2021)
+ * Date: April 4, 2021
+ * Description: User Class to store data about indiv. user.
+ */
+
 package Task.Manager.Project;
 
 import java.util.Date;
 
 public class User {
 
-    private String email;
-    private String userName;
-    private String password;
-    private String loginStatus; //TODO: should this be bool?
-    private Date registerDate;
-    private int userID; // unique ID for every user?
+    protected String email;
+    protected String userName;
+    protected String password;
+    private boolean loginStatus = false; //default = f TODO: this was string on class dig.
+    //private Date registerDate;
+    //private int userID; // unique ID for every user?
 
     /***********************
      * Constructors
      * *********************/
     public User(String email, String userName, String password,
-                String loginStatus, Date registerDate, int userID) {
+                boolean loginStatus, Date registerDate, int userID) {
         this.email = email;
         this.userName = userName;
         this.password = password;
         this.loginStatus = loginStatus;
-        this.registerDate = registerDate;
-        this.userID = userID;
+        /*this.registerDate = registerDate;
+        this.userID = userID; //TODO: get rid of this?*/
     }
 
     public User(String email, String userName, String password) {
@@ -33,54 +41,72 @@ public class User {
     /***********************
      * Getters
      * *********************/
-    public String getEmail() {
+    private String getEmail() {
         return email;
     }
 
-    public String getUserName() {
+    private String getUserName() {
         return userName;
     }
 
-    public String getPassword() {
+    private String getPassword() {
         return password;
     }
 
-    public String getLoginStatus() {
+    private boolean getLoginStatus() {
         return loginStatus;
     }
 
-    public Date getRegisterDate() {
+   /* private Date getRegisterDate() {
         return registerDate;
     }
 
-    public int getUserID() {
+    private int getUserID() {
         return userID;
-    }
+    }*/
 
     /***********************
      * Setters
      * *********************/
-    public void setEmail(String email) {
+    private void setEmail(String email) {
         this.email = email;
     }
 
-    public void setUserName(String userName) {
+    private void setUserName(String userName) {
         this.userName = userName;
     }
 
-    public void setPassword(String password) {
+    private void setPassword(String password) {
         this.password = password;
     }
 
-    public void setLoginStatus(String loginStatus) {
+    private void setLoginStatus(boolean loginStatus) {
         this.loginStatus = loginStatus;
     }
 
-    public void setRegisterDate(Date registerDate) {
+    /*private void setRegisterDate(Date registerDate) {
         this.registerDate = registerDate;
     }
 
-    public void setUserID(int userID) {
+    private void setUserID(int userID) {
         this.userID = userID;
+    }*/
+
+    /***********************
+     * Methods
+     * *********************/
+    private boolean verifyLogin(String usrName, String psWord, boolean logStat) {
+        if (usrName.equals(this.userName) &&
+                psWord.equals(this.password) &&
+                !logStat) {
+            //correct userName, passWord and not already logged in
+            this.loginStatus = true;
+            System.out.println("Thank you, you are now logged in.");
+            return true;
+        } else {
+            System.out.println("You have entered incorrect information.");
+            return false;
+        }
+
     }
 }
