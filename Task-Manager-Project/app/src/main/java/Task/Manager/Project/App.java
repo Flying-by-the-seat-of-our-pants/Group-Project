@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class App {
 
     private static final String FILE_NAME = "./archive.json";
-    private static char choice = 'y';
+    private static String choice = "n";
     private static String uName;
     private static String pWord;
     private static String eMail;
@@ -38,7 +38,7 @@ public class App {
         Scanner myObj = new Scanner(System.in);
         loadUsers();
 
-        while (choice == 'y') {
+        while (choice == "N" || choice == "n") {
             //homepage
 
             //display
@@ -57,21 +57,16 @@ public class App {
                     //TODO: need users search() func.
                     //for(User u : users) {
                     for(int i = 0; i < users.size(); i++) {
-                        if(users.get(i).userName.equals(uName)){
+                        if(users.get(i).verifyLogin(uName, pWord, users.get(i).loginStatus)){
+                        /*if(users.get(i).userName.equals(uName) &&
+                                users.get(i).password.equals(pWord)){*/
                             System.out.println("userName exists.");
-                            break;
-                        }
-                    }
-                    for(int i = 0; i < users.size(); i++) {
-                        if(users.get(i).password.equals(pWord)){
                             System.out.println("password correct.");
+                            users.get(i).loginStatus = true;
                             break;
                         }
                     }
-                        //int i = users.findUser(uName);
-                        //usersList.get(i).;
-                        //User tempUsr = new users.usersList.get(1);
-                    //}
+                    //go to "Dashboard" - dashMenu();
 
                 case "2": //Register
                     System.out.println("Please enter user name: ");
@@ -81,20 +76,35 @@ public class App {
                     System.out.println("Please enter email: ");
                     eMail = myObj.nextLine(); //get email
 
-                    /*if (users.userExists(uName)) {// if user already exists,
-                        System.out.println("User already exists, please choose Login.");
-                    }*/
+                    for(int i = 0; i < users.size(); i++) {//if user already exists
+                        if(users.get(i).userName.equals(uName)){
+                            System.out.println("userName already exists.");
+                            break;
+                        }
+                    }
                     User une = new User(eMail,uName,pWord);
 
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + picked);
             }
-
-        }
+            System.out.println("Do you wish to logout? Y or N");
+            choice = myObj.nextLine(); //get choice
+        } // end while choice loop
+        //write data to archive.
     }
 
     private static void loadUsers(){
         users = catalog.getUsers(FILE_NAME);
     }
+
+    private static void loginMenu(){
+
+    }
+
+    private static void dashMenu(){
+
+    }
+
+
 }

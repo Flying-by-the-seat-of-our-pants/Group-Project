@@ -8,14 +8,12 @@
 
 package Task.Manager.Project;
 
-import java.util.Date;
-
 public class User {
 
     protected String email;
     protected String userName;
     protected String password;
-    private boolean loginStatus = false; //default = f TODO: this was string on class dig.
+    protected boolean loginStatus = false; //default = f TODO: this was string on class dig.
     //private Date registerDate;
     //private int userID; // unique ID for every user?
 
@@ -23,7 +21,7 @@ public class User {
      * Constructors
      * *********************/
     public User(String email, String userName, String password,
-                boolean loginStatus, Date registerDate, int userID) {
+                boolean loginStatus/*, Date registerDate, int userID*/) {
         this.email = email;
         this.userName = userName;
         this.password = password;
@@ -95,7 +93,7 @@ public class User {
     /***********************
      * Methods
      * *********************/
-    private boolean verifyLogin(String usrName, String psWord, boolean logStat) {
+    protected boolean verifyLogin(String usrName, String psWord, boolean logStat) {
         if (usrName.equals(this.userName) &&
                 psWord.equals(this.password) &&
                 !logStat) {
@@ -109,4 +107,17 @@ public class User {
         }
 
     }
+
+    protected void register(){
+
+    }
+
+    protected void createNewList(){
+
+    }
+
+    protected void createNewTask(){
+
+    }
+
 }
