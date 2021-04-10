@@ -21,6 +21,7 @@ import java.util.List;
 
 public class Catalog {
     private final Gson gson;
+    private User usr;
 
     /***********************
      * Constructors
@@ -47,11 +48,34 @@ public class Catalog {
 
     }
 
-    public void archiveUsers(String archiveFile, ArrayList<Users> users){
+    public void archiveUsers(String archiveFile, List<User> users){
         String json = gson.toJson(users);
 
         //writes out to file
         try { Files.writeString(Paths.get(archiveFile), json); }
         catch (IOException ex) { ex.printStackTrace(); }
     }
+
+    // Reads in data from json file, returns list of TDList objects
+    /*public List<TDList> getLists(String listArchiveFile){
+        String json = "";
+        try { json = Files.readString(Paths.get(listArchiveFile)); }
+        catch (IOException ex) { ex.printStackTrace(); }
+
+        if(json.isBlank()){
+            return new ArrayList();
+        }else{//read from file
+            Type listType = new TypeToken<ArrayList<TDList>>() {}.getType();
+            return gson.fromJson(json, listType);
+        }
+
+    }
+
+    public void archiveLists(String listArchiveFile, ArrayList<TDList> tdLists){
+        String json = gson.toJson(tdLists);
+
+        //writes out to file
+        try { Files.writeString(Paths.get(listArchiveFile), json); }
+        catch (IOException ex) { ex.printStackTrace(); }
+    }*/
 }

@@ -22,28 +22,31 @@ public class App {
     private static String uName;
     private static String pWord;
     private static String eMail;
-    private static List<User> users = new ArrayList<>();
-    private static Catalog catalog = new Catalog();
-    private static List<User> userList;
+    private static List<User> users;// = new ArrayList<>();
+    private static final Catalog catalog = new Catalog();
+    private static User currUser;
+    static Scanner myObj = new Scanner(System.in);
 
-    /*public App(){
+    public App(){
         super();
         users = new ArrayList();
-        //users = new List();
-        //catalog = new Catalog();
-    }*/
+    }
 
     public static void main(String[] args) {
 
-        Scanner myObj = new Scanner(System.in);
-        loadUsers();
+        loadUsers();//Load stored data from json file
 
-        while (choice == "N" || choice == "n") {
-            //homepage
-
+        while (choice.equals("N") || choice.equals("n")) {
             //display
-            System.out.println("Login(1), \n Register(2)\n");
+            System.out.println("***** Menu *****\n" +
+                               "----------------");
+            System.out.println("Please choose from the following by entering" +
+                    "the corresponding number.");
+            System.out.println("Login(1),\n" +
+                            "Register(2)\n");
+                            //TODO: admin option?
             String picked = myObj.nextLine(); // get user input
+
             switch (picked) {
                 case "1": // Login
                     System.out.println("Please enter user name: ");
@@ -53,58 +56,131 @@ public class App {
 
                     //has to go to user list and see if user exists
                     //has to check for password
-                    //if (users.userExists(uName)) {// if user exists,
                     //TODO: need users search() func.
-                    //for(User u : users) {
-                    for(int i = 0; i < users.size(); i++) {
-                        if(users.get(i).verifyLogin(uName, pWord, users.get(i).loginStatus)){
-                        /*if(users.get(i).userName.equals(uName) &&
-                                users.get(i).password.equals(pWord)){*/
-                            System.out.println("userName exists.");
-                            System.out.println("password correct.");
-                            users.get(i).loginStatus = true;
+                    for(User u : users) {
+                        if(u.verifyLogin(uName, pWord, u.loginStatus)){
+                            /*System.out.println("userName exists.");
+                            System.out.println("password correct.");*/
+                            u.loginStatus = true;
+                            //set user
+                            currUser = u;
                             break;
                         }
                     }
+
                     //go to "Dashboard" - dashMenu();
+                    dashMenu();
+                    break;// leave switch statement
 
                 case "2": //Register
                     System.out.println("Please enter user name: ");
                     uName = myObj.nextLine(); //get username
-                    System.out.println("Please enter password: ");
-                    pWord = myObj.nextLine(); //get password
-                    System.out.println("Please enter email: ");
-                    eMail = myObj.nextLine(); //get email
-
-                    for(int i = 0; i < users.size(); i++) {//if user already exists
-                        if(users.get(i).userName.equals(uName)){
+                    //have to check if username already used
+                    for(User u : users) {//if username already exists
+                        if(u.userName.equals(uName)){
                             System.out.println("userName already exists.");
                             break;
                         }
                     }
+                    System.out.println("Please enter password: ");
+                    pWord = myObj.nextLine(); //get password
+                    System.out.println("Please enter email: ");
+                    eMail = myObj.nextLine(); //get email
+                    //if email exists, user already has acct.
+                    for(User u : users) {//if user already exists
+                        if(u.email.equals(eMail)){
+                            System.out.println("user already exists.");
+                            break;
+                        }
+                    }
+                    //TODO: add new user to users list
                     User une = new User(eMail,uName,pWord);
-
+                    //send back to login? OR-
+                    //go to "Dashboard" - dashMenu(); set User if this route
                     break;
+
                 default:
                     throw new IllegalStateException("Unexpected value: " + picked);
             }
+
             System.out.println("Do you wish to logout? Y or N");
             choice = myObj.nextLine(); //get choice
+
         } // end while choice loop
+
+        currUser.loginStatus = false;// logout currUser
         //write data to archive.
+        //TODO: have to update users before writing out?
+        catalog.archiveUsers(FILE_NAME, users);
+
     }
 
+    //Load data from json file into List<User> users
     private static void loadUsers(){
         users = catalog.getUsers(FILE_NAME);
     }
 
+    //in lieu of GUI, this will present a login for the user.
     private static void loginMenu(){
-
+        //TODO: implement loginMenu and call in main
     }
 
-    private static void dashMenu(){
+    //in lieu of GUI, this will present a dashboard for the user.
+    private static void dashMenu() {
+        //TODO: Add while loop OR recursive call
+        System.out.println("*** Dashboard ***");
+        System.out.println("Hello " + currUser.userName + ",\n\n");
+
+        System.out.println("***** Options *****\n" +
+                "-------------------");
+        System.out.println("*View Lists (1).\n" +
+                "*Add new List (2).\n" +
+                "*Add new Task (3).\n" +
+                "*Add new Sub Task (4).\n" +
+                "*Logout (5).\n");
+        String menu = myObj.nextLine(); // get user input
+
+        switch (menu) {
+
+            case "1": //View Lists
+                currUser.displayLists();
+
+                break;
+
+            case "2": //Add new list
+                String liName, liDesc, choice;
+                TDList templi;
+                //get list name & desc
+                System.out.println("Please enter list name: ");
+                liName = myObj.nextLine(); //get list name
+                System.out.println("Please enter list desc: ");
+                liDesc = myObj.nextLine(); //get description
+                currUser.createList(liName, liDesc);
+                templi = currUser.lastList();
+                //TODO: mess with display? call function?
+                System.out.println("Your new list is: " + templi.listName );
+                System.out.println("Return to Dashboard? (Y/N)");
+                choice = myObj.nextLine();
+                if(choice.equals("Y") || choice.equals("y")){
+                    dashMenu();//return to dashboard.
+                }
+                break;
+
+            case "3": //Add new task
+
+                break;
+
+            case "4": //Add new sub task
+
+                break;
+
+            case "5": //Logout
+
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + menu);
+        }
 
     }
-
-
 }

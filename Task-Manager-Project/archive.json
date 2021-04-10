@@ -2,16 +2,52 @@
   {
     "email": "dave@a.com",
     "userName": "daveM617",
-    "password": "secret"
+    "password": "secret",
+    "loginStatus": false,
+    "tdLists": [
+      {
+        "listName": "daveList1",
+        "listDesc": "School",
+        "tasks": [
+          {
+            "taskName": "Calc HW",
+            "taskDesc": "Chapter 11.4",
+            "completed": false
+          },
+          {
+            "taskName": "Geo HW",
+            "taskDesc": "Lab report 5",
+            "completed": false
+          }
+        ]
+      },
+      {
+        "listName": "daveList2",
+        "listDesc": "Work",
+        "tasks": [
+          {
+            "taskName": "Penske file",
+            "taskDesc": "Due Asap",
+            "completed": false
+          }
+        ]
+      },
+      {
+        "listName": "daveList3",
+        "listDesc": "skiing"
+      }
+    ]
   },
   {
     "email": "will@a.com",
     "userName": "willQ208",
-    "password": "supersecret"
+    "password": "supersecret",
+    "loginStatus": false
   },
   {
     "email": "steveY@a.com",
-    "userName": "steveY2k1",
-    "password": "topsecret"
+    "userName": "steveY2k",
+    "password": "topsecret",
+    "loginStatus": false
   }
 ]

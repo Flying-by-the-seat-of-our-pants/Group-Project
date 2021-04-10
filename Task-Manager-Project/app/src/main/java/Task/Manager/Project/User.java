@@ -8,26 +8,35 @@
 
 package Task.Manager.Project;
 
+import java.util.List;
+
 public class User {
 
     protected String email;
     protected String userName;
     protected String password;
     protected boolean loginStatus = false; //default = f TODO: this was string on class dig.
-    //private Date registerDate;
-    //private int userID; // unique ID for every user?
+    // Need to store lists connected to User.
+    protected List<TDList> tdLists; //not in orig scope. Added by Dave McD.
 
     /***********************
      * Constructors
      * *********************/
+    public User(){/*intentionally empty*/};
+
     public User(String email, String userName, String password,
-                boolean loginStatus/*, Date registerDate, int userID*/) {
+                boolean loginStatus, List<TDList> tdLists /*, Date registerDate, int userID*/) {
         this.email = email;
         this.userName = userName;
         this.password = password;
         this.loginStatus = loginStatus;
-        /*this.registerDate = registerDate;
-        this.userID = userID; //TODO: get rid of this?*/
+    }
+
+    public User(String email, String userName, String password, boolean loginStatus) {
+        this.email = email;
+        this.userName = userName;
+        this.password = password;
+        this.loginStatus = loginStatus;
     }
 
     public User(String email, String userName, String password) {
@@ -55,14 +64,6 @@ public class User {
         return loginStatus;
     }
 
-   /* private Date getRegisterDate() {
-        return registerDate;
-    }
-
-    private int getUserID() {
-        return userID;
-    }*/
-
     /***********************
      * Setters
      * *********************/
@@ -82,14 +83,6 @@ public class User {
         this.loginStatus = loginStatus;
     }
 
-    /*private void setRegisterDate(Date registerDate) {
-        this.registerDate = registerDate;
-    }
-
-    private void setUserID(int userID) {
-        this.userID = userID;
-    }*/
-
     /***********************
      * Methods
      * *********************/
@@ -99,7 +92,7 @@ public class User {
                 !logStat) {
             //correct userName, passWord and not already logged in
             this.loginStatus = true;
-            System.out.println("Thank you, you are now logged in.");
+            System.out.println("Thank you, you are now logged in.\n");
             return true;
         } else {
             System.out.println("You have entered incorrect information.");
@@ -108,11 +101,45 @@ public class User {
 
     }
 
+    protected void displayLists(){//not in orig scope. Added by Dave McD.
+        if(loginStatus) {//user must be logged in.
+         //TODO: Check for null list
+            // TODO: add more output? Mess with format.
+            System.out.println("Your Lists:");
+            for (TDList tdl : tdLists) {
+                System.out.println("List:" +
+                        tdl.listName);
+                for(Task tsk : tdl.tasks) {
+                    System.out.println("\tTask: " +
+                            tsk.taskName);
+                    //TODO: May be an issue in here.
+                }
+                //System.out.println("\n");
+            }
+        }
+    }
+
+    protected TDList lastList() {//not in orig scope. Added by Dave McD.
+        TDList tdl;
+        if (loginStatus) {//user must be logged in.
+            tdl =  tdLists.get(tdLists.size() - 1);
+        } else {
+            tdl = new TDList();
+        }
+        return tdl;
+    }
+
+    //TODO: add functionality to add tasks here.
+    protected void createList(String name, String description){
+        //TDList td = new TDList(name, description);
+        tdLists.add(new TDList(name, description));
+    }
+
     protected void register(){
 
     }
 
-    protected void createNewList(){
+    protected void createSubList(){
 
     }
 
