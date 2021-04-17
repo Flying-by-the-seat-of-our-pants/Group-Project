@@ -1,7 +1,7 @@
 [
   {
     "email": "dave@a.com",
-    "userName": "daveM617",
+    "userName": "daveM",
     "password": "secret",
     "loginStatus": false,
     "tdLists": [
@@ -40,14 +40,20 @@
   },
   {
     "email": "will@a.com",
-    "userName": "willQ208",
-    "password": "supersecret",
-    "loginStatus": false
+    "userName": "willQ",
+    "password": "secret",
+    "loginStatus": false,
+    "tdLists": [
+      {
+        "listName": "willList1",
+        "listDesc": "Yard Work"
+      }
+    ]
   },
   {
     "email": "steveY@a.com",
     "userName": "steveY2k",
-    "password": "topsecret",
+    "password": "secret",
     "loginStatus": false
   }
 ]

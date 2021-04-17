@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 public class App {
 
     private static final String FILE_NAME = "./archive.json";
@@ -58,19 +60,21 @@ public class App {
                     //has to check for password
                     //TODO: need users search() func.
                     for(User u : users) {
-                        if(u.verifyLogin(uName, pWord, u.loginStatus)){
+                        if (u.verifyLogin(uName, pWord, u.loginStatus)) {
                             /*System.out.println("userName exists.");
                             System.out.println("password correct.");*/
                             u.loginStatus = true;
                             //set user
                             currUser = u;
-                            break;
+                            System.out.println("Thank you, you are now logged in.\n");
+                            //go to "Dashboard" - dashMenu();
+                            dashMenu();
+                            break;// leave for loop
                         }
                     }
-
-                    //go to "Dashboard" - dashMenu();
-                    dashMenu();
-                    break;// leave switch statement
+                    //TODO: where to put this err msg??
+                    //System.out.println("You have entered incorrect information.");
+                    break;
 
                 case "2": //Register
                     System.out.println("Please enter user name: ");
@@ -103,6 +107,11 @@ public class App {
                     throw new IllegalStateException("Unexpected value: " + picked);
             }
 
+            System.out.println("Return to Dashboard? (Y/N)");
+            choice = myObj.nextLine();
+            if(choice.equals("Y") || choice.equals("y")){
+                dashMenu();//return to dashboard.
+            }
             System.out.println("Do you wish to logout? Y or N");
             choice = myObj.nextLine(); //get choice
 
@@ -110,7 +119,7 @@ public class App {
 
         currUser.loginStatus = false;// logout currUser
         //write data to archive.
-        //TODO: have to update users before writing out?
+
         catalog.archiveUsers(FILE_NAME, users);
 
     }
@@ -136,29 +145,49 @@ public class App {
         System.out.println("*View Lists (1).\n" +
                 "*Add new List (2).\n" +
                 "*Add new Task (3).\n" +
-                "*Add new Sub Task (4).\n" +
-                "*Logout (5).\n");
+                "*Remove List (4).\n" +
+                "*Remove Task (5).\n" +
+                "*Move Task (6).\n" +
+                "*Logout (7).\n");
         String menu = myObj.nextLine(); // get user input
 
+        String tmpName, tmpTskName, tmpDesc, choice;
         switch (menu) {
-
+            //TODO: just make some global vars up here
             case "1": //View Lists
                 currUser.displayLists();
 
                 break;
 
             case "2": //Add new list
-                String liName, liDesc, choice;
                 TDList templi;
                 //get list name & desc
                 System.out.println("Please enter list name: ");
-                liName = myObj.nextLine(); //get list name
+                tmpName = myObj.nextLine(); //get list name
                 System.out.println("Please enter list desc: ");
-                liDesc = myObj.nextLine(); //get description
-                currUser.createList(liName, liDesc);
+                tmpDesc = myObj.nextLine(); //get description
+                currUser.createList(tmpName, tmpDesc);
                 templi = currUser.lastList();
                 //TODO: mess with display? call function?
                 System.out.println("Your new list is: " + templi.listName );
+                /*System.out.println("Return to Dashboard? (Y/N)");
+                choice = myObj.nextLine();
+                if(choice.equals("Y") || choice.equals("y")){
+                    dashMenu();//return to dashboard.
+                }*/
+                break;
+
+            case "3": //Add new task
+                //get list name & desc
+                System.out.println("Please enter name of list to add task to: ");
+                tmpName = myObj.nextLine(); //get list name
+                System.out.println("Please enter task name: ");
+                tmpTskName = myObj.nextLine(); //get task name
+                System.out.println("Please enter task desc: ");
+                tmpDesc = myObj.nextLine(); //get description
+                currUser.createTask(tmpName, tmpTskName, tmpDesc);
+                System.out.println("Your new tasks for,");
+                currUser.displayTasks(tmpName);
                 System.out.println("Return to Dashboard? (Y/N)");
                 choice = myObj.nextLine();
                 if(choice.equals("Y") || choice.equals("y")){
@@ -166,16 +195,31 @@ public class App {
                 }
                 break;
 
-            case "3": //Add new task
+            case "4": //Remove list
+                System.out.println("Please enter name of list to remove: ");
+                tmpName = myObj.nextLine(); //get list name
+                currUser.removeList(tmpName);
+                break;
+
+            case "5": //Remove task
+                System.out.println("Please enter name of list to remove task from: ");
+                tmpName = myObj.nextLine(); //get list name
+                System.out.println("Please enter task name: ");
+                tmpTskName = myObj.nextLine(); //get task name
+                currUser.removeTask(tmpName, tmpTskName);
+                break;
+
+            case "6": //Move task from one list to another.
 
                 break;
 
-            case "4": //Add new sub task
-
-                break;
-
-            case "5": //Logout
-
+            case "7": //Logout
+                System.out.println("Are you sure you wish to logout? (Y/N)");
+                choice = myObj.nextLine();
+                if(choice.equals("Y") || choice.equals("y")){
+                    System.out.println("You are now logged out, thank you.");
+                    exit(0);
+                }
                 break;
 
             default:

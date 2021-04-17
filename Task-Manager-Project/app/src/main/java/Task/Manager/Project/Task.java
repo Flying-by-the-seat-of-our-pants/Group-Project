@@ -11,6 +11,7 @@ package Task.Manager.Project;
 public class Task {
     protected String taskName;
     protected String taskDesc; //not in orig scope. Added by Dave McD.
+    protected Task subTask;
     protected boolean completed = false; //default false. Not in orig scope. Added by Dave McD.
     //protected Task subTask;
     /***********************

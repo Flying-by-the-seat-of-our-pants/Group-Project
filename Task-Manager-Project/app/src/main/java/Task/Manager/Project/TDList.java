@@ -15,7 +15,7 @@ public class TDList {
     //protected int listID;
     protected String listDesc;
     protected List<Task> tasks;
-    //protected TDList subList;
+    protected TDList subList;
 
     /***********************
      * Constructors

@@ -8,6 +8,7 @@
 
 package Task.Manager.Project;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -92,10 +93,10 @@ public class User {
                 !logStat) {
             //correct userName, passWord and not already logged in
             this.loginStatus = true;
-            System.out.println("Thank you, you are now logged in.\n");
+            /*System.out.println("Thank you, you are now logged in.\n");*/
             return true;
         } else {
-            System.out.println("You have entered incorrect information.");
+            /*System.out.println("You have entered incorrect information.");*/
             return false;
         }
 
@@ -131,10 +132,22 @@ public class User {
 
     //TODO: add functionality to add tasks here.
     protected void createList(String name, String description){
-        //TDList td = new TDList(name, description);
+        if(tdLists == null){
+            tdLists = new ArrayList<TDList>() {
+            };
+        }
         tdLists.add(new TDList(name, description));
     }
 
+    protected void removeList(String name) {
+        for (TDList tdl : tdLists) {//have to search all lists in tdLists
+            if (tdl.listName.equals(name)) {
+                System.out.println("Removing List: " + tdl.listName + "\n");
+                tdLists.remove(tdl);
+                break;
+            }
+        }
+    }
     protected void register(){
 
     }
@@ -143,8 +156,53 @@ public class User {
 
     }
 
-    protected void createNewTask(){
-
+    protected void createTask(String liName, String name, String description){
+        // Have to search tdList for list
+        for(TDList tdl : tdLists) {//have to search all lists in tdLists
+            if(tdl.listName.equals(liName)){
+                if(tdl.tasks == null){
+                    tdl.tasks = new ArrayList<Task>();
+                }
+                tdl.tasks.add(new Task(name, description));
+            }
+        }
     }
 
+    // Needs list name where task is, and task name.
+    protected void removeTask(String liName, String name){
+        // Have to search tdList for list
+        for(TDList tdl : tdLists) {//have to search all lists in tdLists
+            if(tdl.listName.equals(liName)){
+                System.out.println("List exists! \n");
+                // Have to search task list for the task
+                for (Task tsk : tdl.tasks) {
+                    if(tsk.taskName.equals(name)) {
+                        System.out.println("Removing Task: " + tsk.taskName);
+                        tdl.tasks.remove(tsk);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    protected void displayTasks(String liName){//not in orig scope. Added by Dave McD.
+        if(loginStatus) {//user must be logged in.
+            //TODO: Check for null list
+            // TODO: add more output? Mess with format.
+            //System.out.println("Your Lists:");
+            for (TDList tdl : tdLists) {
+                if(tdl.listName.equals(liName)) {
+                    System.out.println("List: " +
+                            tdl.listName);
+                    for (Task tsk : tdl.tasks) {
+                        System.out.println("\tTask: " +
+                                tsk.taskName);
+                        //TODO: May be an issue in here.
+                    }
+                }
+            }
+            System.out.println("\n");
+        }
+    }
 }
