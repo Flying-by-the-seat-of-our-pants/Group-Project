@@ -210,7 +210,10 @@ public class App {
                 break;
 
             case "6": //Move task from one list to another.
-
+                System.out.println("Please enter name of list to move task from: ");
+                tmpName = myObj.nextLine(); //get list name
+                System.out.println("Please enter task name: ");
+                tmpTskName = myObj.nextLine(); //get task name
                 break;
 
             case "7": //Logout
