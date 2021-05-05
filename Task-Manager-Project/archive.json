@@ -3,17 +3,12 @@
     "email": "dave@a.com",
     "userName": "daveM",
     "password": "secret",
-    "loginStatus": false,
+    "loginStatus": true,
     "tdLists": [
       {
         "listName": "daveList1",
         "listDesc": "School",
         "tasks": [
-          {
-            "taskName": "Calc HW",
-            "taskDesc": "Chapter 11.4",
-            "completed": false
-          },
           {
             "taskName": "Geo HW",
             "taskDesc": "Lab report 5",
@@ -28,6 +23,11 @@
           {
             "taskName": "Penske file",
             "taskDesc": "Due Asap",
+            "completed": false
+          },
+          {
+            "taskName": "Calc HW",
+            "taskDesc": "Chapter 11.4",
             "completed": false
           }
         ]

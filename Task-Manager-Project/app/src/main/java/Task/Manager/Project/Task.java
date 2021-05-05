@@ -29,6 +29,21 @@ public class Task {
     /***********************
      * Getters
      * *********************/
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public String getTaskDesc() {
+        return taskDesc;
+    }
+
+    public Task getSubTask() {
+        return subTask;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
 
     /***********************
      * Setters

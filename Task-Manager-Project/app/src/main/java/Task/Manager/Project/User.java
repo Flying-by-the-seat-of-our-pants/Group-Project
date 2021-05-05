@@ -65,6 +65,10 @@ public class User {
         return loginStatus;
     }
 
+    public List<TDList> getTdLists(String liName) {
+        return tdLists;
+    }
+
     /***********************
      * Setters
      * *********************/
@@ -102,18 +106,29 @@ public class User {
 
     }
 
+    protected void displayListNames(){
+        for (TDList tdl : tdLists) {
+            System.out.println("List: " +
+                    tdl.listName);
+        }
+    }
+
     protected void displayLists(){//not in orig scope. Added by Dave McD.
         if(loginStatus) {//user must be logged in.
-         //TODO: Check for null list
             // TODO: add more output? Mess with format.
             System.out.println("Your Lists:");
             for (TDList tdl : tdLists) {
                 System.out.println("List:" +
                         tdl.listName);
-                for(Task tsk : tdl.tasks) {
-                    System.out.println("\tTask: " +
-                            tsk.taskName);
-                    //TODO: May be an issue in here.
+                if(tdl.tasks != null) {
+                    for (Task tsk : tdl.tasks) {
+                        System.out.println("\tTask: " +
+                                tsk.taskName);
+                    }
+                    System.out.println("\n");
+                }
+                else if(tdl.tasks == null){
+                    System.out.println("No tasks.");
                 }
                 //System.out.println("\n");
             }
@@ -137,6 +152,15 @@ public class User {
             };
         }
         tdLists.add(new TDList(name, description));
+    }
+
+    protected TDList getListByName(String name){
+        for (TDList tdl : tdLists) {//have to search all lists in tdLists
+            if (tdl.listName.equals(name)) {
+                return tdl;
+            }
+        }
+        return new TDList();
     }
 
     protected void removeList(String name) {

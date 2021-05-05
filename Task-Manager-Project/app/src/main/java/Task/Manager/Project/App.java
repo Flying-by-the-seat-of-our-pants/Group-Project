@@ -42,7 +42,7 @@ public class App {
             //display
             System.out.println("***** Menu *****\n" +
                                "----------------");
-            System.out.println("Please choose from the following by entering" +
+            System.out.println("Please choose from the following by entering " +
                     "the corresponding number.");
             System.out.println("Login(1),\n" +
                             "Register(2)\n");
@@ -113,14 +113,18 @@ public class App {
                 dashMenu();//return to dashboard.
             }
             System.out.println("Do you wish to logout? Y or N");
-            choice = myObj.nextLine(); //get choice
+            choice = myObj.nextLine(); //get choice, checks it for while condition
 
+            // Update/ write to archive before end of while loop
+            // testing here, may move back down for only one call
+            catalog.archiveUsers(FILE_NAME, users);
         } // end while choice loop
 
         currUser.loginStatus = false;// logout currUser
         //write data to archive.
 
-        catalog.archiveUsers(FILE_NAME, users);
+        // TODO: Have to move this up.
+        //catalog.archiveUsers(FILE_NAME, users);
 
     }
 
@@ -151,7 +155,7 @@ public class App {
                 "*Logout (7).\n");
         String menu = myObj.nextLine(); // get user input
 
-        String tmpName, tmpTskName, tmpDesc, choice;
+        String tmpLiName, tmpTskName, tmpDesc, choice;
         switch (menu) {
             //TODO: just make some global vars up here
             case "1": //View Lists
@@ -163,10 +167,10 @@ public class App {
                 TDList templi;
                 //get list name & desc
                 System.out.println("Please enter list name: ");
-                tmpName = myObj.nextLine(); //get list name
+                tmpLiName = myObj.nextLine(); //get list name
                 System.out.println("Please enter list desc: ");
                 tmpDesc = myObj.nextLine(); //get description
-                currUser.createList(tmpName, tmpDesc);
+                currUser.createList(tmpLiName, tmpDesc);
                 templi = currUser.lastList();
                 //TODO: mess with display? call function?
                 System.out.println("Your new list is: " + templi.listName );
@@ -180,14 +184,16 @@ public class App {
             case "3": //Add new task
                 //get list name & desc
                 System.out.println("Please enter name of list to add task to: ");
-                tmpName = myObj.nextLine(); //get list name
+                tmpLiName = myObj.nextLine(); //get list name
                 System.out.println("Please enter task name: ");
                 tmpTskName = myObj.nextLine(); //get task name
                 System.out.println("Please enter task desc: ");
                 tmpDesc = myObj.nextLine(); //get description
-                currUser.createTask(tmpName, tmpTskName, tmpDesc);
+                currUser.createTask(tmpLiName, tmpTskName, tmpDesc);
                 System.out.println("Your new tasks for,");
-                currUser.displayTasks(tmpName);
+
+                // TODO: is this displayTasks right? **********
+                currUser.displayTasks(tmpLiName);
                 System.out.println("Return to Dashboard? (Y/N)");
                 choice = myObj.nextLine();
                 if(choice.equals("Y") || choice.equals("y")){
@@ -195,25 +201,44 @@ public class App {
                 }
                 break;
 
-            case "4": //Remove list
+            case "4": //Remove list TODO: add output to this.
                 System.out.println("Please enter name of list to remove: ");
-                tmpName = myObj.nextLine(); //get list name
-                currUser.removeList(tmpName);
+                tmpLiName = myObj.nextLine(); //get list name
+                currUser.removeList(tmpLiName);
                 break;
 
             case "5": //Remove task
                 System.out.println("Please enter name of list to remove task from: ");
-                tmpName = myObj.nextLine(); //get list name
-                System.out.println("Please enter task name: ");
+                tmpLiName = myObj.nextLine(); //get list name
+                System.out.println("Please enter task name you wish to move: ");
                 tmpTskName = myObj.nextLine(); //get task name
-                currUser.removeTask(tmpName, tmpTskName);
+                currUser.removeTask(tmpLiName, tmpTskName);
+                
+                
                 break;
 
             case "6": //Move task from one list to another.
+                System.out.println("Move task from one list to another.\n" +
+                "***********************************\n\n" +
+                        "Your current lists are: ");
+                currUser.displayListNames();
                 System.out.println("Please enter name of list to move task from: ");
-                tmpName = myObj.nextLine(); //get list name
-                System.out.println("Please enter task name: ");
+                tmpLiName = myObj.nextLine(); //get list name
+                TDList tmpTDL = currUser.getListByName(tmpLiName);
+                System.out.println("The tasks for your list are: ");
+                tmpTDL.displayTaskNames();
+                System.out.println("Please enter name of task to move: ");
                 tmpTskName = myObj.nextLine(); //get task name
+                Task tmpTsk = tmpTDL.getTaskByName(tmpTskName);
+                // Have to remove task first.
+                currUser.removeTask(tmpLiName, tmpTskName);
+                currUser.displayListNames();
+                System.out.println("Please enter name of list to move task to: ");
+                tmpLiName = myObj.nextLine(); //get list name
+                // Creating same task in list given by user.
+                currUser.createTask(tmpLiName, tmpTskName, tmpTsk.getTaskDesc());
+                System.out.println("Your task has been moved.");
+                // TODO: if time, display task in new list
                 break;
 
             case "7": //Logout
