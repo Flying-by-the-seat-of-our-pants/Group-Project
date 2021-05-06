@@ -146,6 +146,7 @@ public class User {
     }
 
     //TODO: add functionality to add tasks here.
+    //TODO: is this the same as constructor?
     protected void createList(String name, String description){
         if(tdLists == null){
             tdLists = new ArrayList<TDList>() {
@@ -179,7 +180,7 @@ public class User {
     protected void createSubList(){
 
     }
-
+//TODO: should this be moved to TDList class?
     protected void createTask(String liName, String name, String description){
         // Have to search tdList for list
         for(TDList tdl : tdLists) {//have to search all lists in tdLists

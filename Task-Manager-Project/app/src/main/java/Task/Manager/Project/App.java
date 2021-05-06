@@ -98,9 +98,13 @@ public class App {
                         }
                     }
                     //TODO: add new user to users list
-                    User une = new User(eMail,uName,pWord);
+
+                    /// Make une curruser?
+                    currUser = new User(eMail,uName,pWord);
                     //send back to login? OR-
-                    //go to "Dashboard" - dashMenu(); set User if this route
+                    System.out.println("Thank you, you are now logged in.\n");
+                    //go to "Dashboard" - dashMenu();
+                    dashMenu();
                     break;
 
                 default:

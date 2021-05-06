@@ -10,8 +10,8 @@ package Task.Manager.Project;
 
 import java.util.List;
 
-public class Users {
-    List<Users> usersList;
+public class Users {//not in orig scope. Added by Dave McD.
+    List<User> usersList; // To hold list of all Users
 
     /***********************
      * Constructors
@@ -19,14 +19,14 @@ public class Users {
     public Users() {// intentionally empty.
     }
 
-    public Users(List<Users> usersList) {
+    public Users(List<User> usersList) {
         this.usersList = usersList;
     }
 
     /***********************
      * Getters
      * *********************/
-    public List<Users> getUsersList() {
+    public List<User> getUsersList() {
         return usersList;
 
     }
@@ -34,7 +34,8 @@ public class Users {
     /***********************
      * Methods
      * *********************/
-//TODO: need: search(), insert(), getUsers(): Iterator
+    //TODO: need: search(), insert(), getUsers(): Iterator
+    //TODO: addUser(),
     boolean userExists(String userName){
         if(this.usersList.contains(userName)){
             return true;
@@ -51,5 +52,9 @@ public class Users {
         else{
             return -1;
         }*/
+    }
+
+    protected void addUser(User newUser){
+        usersList.add(newUser);
     }
 }
