@@ -3,7 +3,7 @@
     "email": "dave@a.com",
     "userName": "daveM",
     "password": "secret",
-    "loginStatus": true,
+    "loginStatus": false,
     "tdLists": [
       {
         "listName": "daveList1",

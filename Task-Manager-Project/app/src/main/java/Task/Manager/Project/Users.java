@@ -34,7 +34,7 @@ public class Users {//not in orig scope. Added by Dave McD.
     /***********************
      * Methods
      * *********************/
-    //TODO: need: search(), insert(), getUsers(): Iterator
+    /*//TODO: need: search(), insert(), getUsers(): Iterator
     //TODO: addUser(),
     boolean userExists(String userName){
         if(this.usersList.contains(userName)){
@@ -44,17 +44,17 @@ public class Users {//not in orig scope. Added by Dave McD.
     }
 
     int findUser(String userName){// any unique id will do.
-        /*if(this.userExists(userName)){*/
+        *//*if(this.userExists(userName)){*//*
             //returns -1 if not found
             return usersList.indexOf(userName);
 
-        /*}
+        *//*}
         else{
             return -1;
-        }*/
+        }*//*
     }
 
     protected void addUser(User newUser){
         usersList.add(newUser);
-    }
+    }*/
 }

@@ -37,6 +37,7 @@ public class App {
     public static void main(String[] args) {
 
         loadUsers();//Load stored data from json file
+        //TODO: check for success. Output msg.
 
         while (choice.equals("N") || choice.equals("n")) {
             //display
@@ -60,7 +61,8 @@ public class App {
                     //has to check for password
                     //TODO: need users search() func.
                     for(User u : users) {
-                        if (u.verifyLogin(uName, pWord, u.loginStatus)) {
+                        boolean verified = u.verifyLogin(uName, pWord, u.loginStatus);
+                        if (verified){
                             /*System.out.println("userName exists.");
                             System.out.println("password correct.");*/
                             u.loginStatus = true;
@@ -73,10 +75,19 @@ public class App {
                         }
                     }
                     //TODO: where to put this err msg??
+                    //TODO: if(!loginStatus)??
                     //System.out.println("You have entered incorrect information.");
                     break;
 
                 case "2": //Register
+                    System.out.println("Please enter email: ");
+                    eMail = myObj.nextLine(); //get email
+                    for(User u : users) {//if email already exists
+                        if(u.email.equals(eMail)){
+                            System.out.println("email already exists.");
+                            break;
+                        }
+                    }
                     System.out.println("Please enter user name: ");
                     uName = myObj.nextLine(); //get username
                     //have to check if username already used
@@ -88,19 +99,11 @@ public class App {
                     }
                     System.out.println("Please enter password: ");
                     pWord = myObj.nextLine(); //get password
-                    System.out.println("Please enter email: ");
-                    eMail = myObj.nextLine(); //get email
-                    //if email exists, user already has acct.
-                    for(User u : users) {//if user already exists
-                        if(u.email.equals(eMail)){
-                            System.out.println("user already exists.");
-                            break;
-                        }
-                    }
                     //TODO: add new user to users list
 
                     /// Make une curruser?
                     currUser = new User(eMail,uName,pWord);
+                    currUser.loginStatus = true;
                     //send back to login? OR-
                     System.out.println("Thank you, you are now logged in.\n");
                     //go to "Dashboard" - dashMenu();
@@ -187,6 +190,10 @@ public class App {
 
             case "3": //Add new task
                 //get list name & desc
+                System.out.println("Add a Task to a List.\n" +
+                        "***********************************\n\n" +
+                        "Your current lists are: ");
+                currUser.displayListNames();
                 System.out.println("Please enter name of list to add task to: ");
                 tmpLiName = myObj.nextLine(); //get list name
                 System.out.println("Please enter task name: ");
@@ -206,12 +213,20 @@ public class App {
                 break;
 
             case "4": //Remove list TODO: add output to this.
+                System.out.println("Remove a List.\n" +
+                        "***********************************\n\n" +
+                        "Your current lists are: ");
+                currUser.displayListNames();
                 System.out.println("Please enter name of list to remove: ");
                 tmpLiName = myObj.nextLine(); //get list name
                 currUser.removeList(tmpLiName);
                 break;
 
             case "5": //Remove task
+                System.out.println("Remove a Task.\n" +
+                        "***********************************\n\n" +
+                        "Your current lists are: ");
+                currUser.displayListNames();
                 System.out.println("Please enter name of list to remove task from: ");
                 tmpLiName = myObj.nextLine(); //get list name
                 System.out.println("Please enter task name you wish to move: ");
@@ -249,7 +264,12 @@ public class App {
                 System.out.println("Are you sure you wish to logout? (Y/N)");
                 choice = myObj.nextLine();
                 if(choice.equals("Y") || choice.equals("y")){
+                    catalog.archiveUsers(FILE_NAME, users);
+                    currUser.loginStatus = false;// logout currUser
+
                     System.out.println("You are now logged out, thank you.");
+
+                    // Second way for deliberated exit/Logout.
                     exit(0);
                 }
                 break;

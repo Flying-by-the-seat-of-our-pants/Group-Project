@@ -128,7 +128,7 @@ public class User {
                     System.out.println("\n");
                 }
                 else if(tdl.tasks == null){
-                    System.out.println("No tasks.");
+                    System.out.println("No tasks.\n");
                 }
                 //System.out.println("\n");
             }
@@ -215,19 +215,33 @@ public class User {
         if(loginStatus) {//user must be logged in.
             //TODO: Check for null list
             // TODO: add more output? Mess with format.
-            //System.out.println("Your Lists:");
+            //System.out.println("Your Tasks:");
             for (TDList tdl : tdLists) {
                 if(tdl.listName.equals(liName)) {
-                    System.out.println("List: " +
-                            tdl.listName);
-                    for (Task tsk : tdl.tasks) {
-                        System.out.println("\tTask: " +
-                                tsk.taskName);
-                        //TODO: May be an issue in here.
+                    if(tdl.tasks != null) {
+                        for (Task tsk : tdl.tasks) {
+                            System.out.println("Task: " +
+                                    tsk.taskName);
+                        }
+                        System.out.println("\n");
+                    }
+                    else if(tdl.tasks == null){
+                        System.out.println("No tasks.\n");
                     }
                 }
             }
             System.out.println("\n");
         }
+    }
+
+    protected void displayLastTask(String liName) {//not in orig scope. Added by Dave McD.
+        for (TDList tdl : tdLists) {
+            if(tdl.listName.equals(liName)) {
+                System.out.println("Task: " +
+                        tdl.tasks.get(tdl.tasks.size() - 1));
+            }
+
+        }
+
     }
 }
