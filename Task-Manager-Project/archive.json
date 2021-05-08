@@ -10,13 +10,13 @@
         "listDesc": "School",
         "tasks": [
           {
-            "taskName": "Calc HW",
-            "taskDesc": "Chapter 11.4",
-            "completed": false
-          },
-          {
             "taskName": "Geo HW",
             "taskDesc": "Lab report 5",
+            "completed": true
+          },
+          {
+            "taskName": "Calc HW",
+            "taskDesc": "Chapter 11.4",
             "completed": false
           }
         ]
@@ -24,13 +24,7 @@
       {
         "listName": "daveList2",
         "listDesc": "Work",
-        "tasks": [
-          {
-            "taskName": "Penske file",
-            "taskDesc": "Due Asap",
-            "completed": false
-          }
-        ]
+        "tasks": []
       },
       {
         "listName": "daveList3",
@@ -53,6 +47,18 @@
   {
     "email": "steveY@a.com",
     "userName": "steveY2k",
+    "password": "secret",
+    "loginStatus": false
+  },
+  {
+    "email": "suzy@a.com",
+    "userName": "suzyQ",
+    "password": "secret",
+    "loginStatus": false
+  },
+  {
+    "email": "alice@a.com",
+    "userName": "aliceM",
     "password": "secret",
     "loginStatus": false
   }
