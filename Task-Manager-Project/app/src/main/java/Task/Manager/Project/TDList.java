@@ -12,10 +12,10 @@ import java.util.List;
 
 public class TDList {
     protected String listName;
-    //protected int listID;
+    //protected int listID; // did not need
     protected String listDesc;
     protected List<Task> tasks;
-    protected TDList subList;
+    protected List<Sublist> subList;
 
     /***********************
      * Constructors
@@ -79,8 +79,12 @@ public class TDList {
     /***********************
      * Methods
      * *********************/
-    public void appendTask(){
 
+    protected void displayTaskNames(){
+        for (Task task : tasks) {
+            System.out.println("Task:" +
+                    task.taskName);
+        }
     }
     @Override
     public String toString() {
@@ -88,5 +92,14 @@ public class TDList {
                 "listName='" + listName + '\'' +
                 ", tasks=" + tasks +
                 '}';
+    }
+
+    public Task getTaskByName(String name){
+        for (Task tsk : tasks) {//have to search all tasks
+            if (tsk.taskName.equals(name)) {
+                return tsk;
+            }
+        }
+        return new Task();
     }
 }

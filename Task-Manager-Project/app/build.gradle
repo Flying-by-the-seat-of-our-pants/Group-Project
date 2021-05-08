@@ -26,6 +26,8 @@ jacoco{
 test{
     //report is generated after test runs
     finalizedBy jacocoTestReport
+
+    useJUnitPlatform()
 }
 
 jacocoTestReport{
@@ -57,11 +59,17 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
+
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    // JUnit Test framework
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.2"
+    testRuntime "org.junit.platform:junit-platform-runner:1.5.2"
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'

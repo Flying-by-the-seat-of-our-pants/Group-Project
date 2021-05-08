@@ -11,8 +11,6 @@
  */
 package Task.Manager.Project;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -20,49 +18,41 @@ import static java.lang.System.exit;
 public class App {
 
     private static final String FILE_NAME = "./archive.json";
-    private static String choice = "n";
-    private static String uName;
-    private static String pWord;
-    private static String eMail;
-    private static List<User> users;// = new ArrayList<>();
+    private static String choice = "y"; // default, start at y to enter while loop
+    private static boolean verified = false; // default = false
     private static final Catalog catalog = new Catalog();
     private static User currUser;
     static Scanner myObj = new Scanner(System.in);
 
-    public App(){
-        super();
-        users = new ArrayList();
-    }
-
     public static void main(String[] args) {
 
         loadUsers();//Load stored data from json file
+        //TODO: check for success. Output msg.
 
-        while (choice.equals("N") || choice.equals("n")) {
+        while (!verified) {
             //display
             System.out.println("***** Menu *****\n" +
-                               "----------------");
-            System.out.println("Please choose from the following by entering" +
+                    "----------------");
+            System.out.println("Please choose from the following by entering " +
                     "the corresponding number.");
             System.out.println("Login(1),\n" +
-                            "Register(2)\n");
-                            //TODO: admin option?
+                    "Register(2)\n");
+            //TODO: admin option?
             String picked = myObj.nextLine(); // get user input
 
             switch (picked) {
                 case "1": // Login
                     System.out.println("Please enter user name: ");
-                    uName = myObj.nextLine(); //get username
+                    String uName = myObj.nextLine(); //get username
                     System.out.println("Please enter password: ");
-                    pWord = myObj.nextLine(); //get password
+                    String pWord = myObj.nextLine(); //get password
 
                     //has to go to user list and see if user exists
                     //has to check for password
                     //TODO: need users search() func.
-                    for(User u : users) {
-                        if (u.verifyLogin(uName, pWord, u.loginStatus)) {
-                            /*System.out.println("userName exists.");
-                            System.out.println("password correct.");*/
+                    for (User u : catalog.users) {
+                        verified = u.verifyLogin(uName, pWord, u.loginStatus);
+                        if (verified) {
                             u.loginStatus = true;
                             //set user
                             currUser = u;
@@ -72,67 +62,72 @@ public class App {
                             break;// leave for loop
                         }
                     }
-                    //TODO: where to put this err msg??
-                    //System.out.println("You have entered incorrect information.");
-                    break;
+                    // Errors in login
+                    if (!verified) {
+                        System.out.println("You have entered incorrect information.");
+                    }
+                    break; // End case 1: Login
 
                 case "2": //Register
+                    System.out.println("Please enter email: ");
+                    String eMail = myObj.nextLine(); //get email
+                    for (User u : catalog.users) {//if email already exists
+                        if (u.email.equals(eMail)) {
+                            System.out.println("email already exists.");
+                            break; // Leave Register, verified = false
+                        }
+                    }
                     System.out.println("Please enter user name: ");
                     uName = myObj.nextLine(); //get username
                     //have to check if username already used
-                    for(User u : users) {//if username already exists
-                        if(u.userName.equals(uName)){
+                    for (User u : catalog.users) {//if username already exists
+                        if (u.userName.equals(uName)) {
                             System.out.println("userName already exists.");
-                            break;
+                            break; // Leave Register, verified = false
                         }
                     }
                     System.out.println("Please enter password: ");
                     pWord = myObj.nextLine(); //get password
-                    System.out.println("Please enter email: ");
-                    eMail = myObj.nextLine(); //get email
-                    //if email exists, user already has acct.
-                    for(User u : users) {//if user already exists
-                        if(u.email.equals(eMail)){
-                            System.out.println("user already exists.");
-                            break;
-                        }
-                    }
-                    //TODO: add new user to users list
-                    User une = new User(eMail,uName,pWord);
+
+                    // Add new user to users list
+                    currUser = new User(eMail, uName, pWord);
+                    catalog.addUser(currUser);
+                    currUser.loginStatus = true;
+                    verified = true;
                     //send back to login? OR-
-                    //go to "Dashboard" - dashMenu(); set User if this route
+                    System.out.println("Thank you, you are now logged in.\n");
+                    //go to "Dashboard" - dashMenu();
+                    dashMenu();
                     break;
 
                 default:
                     throw new IllegalStateException("Unexpected value: " + picked);
             }
+        }//end while loop, if verified == true
 
+        while(choice.equals("Y") || choice.equals("y") ){
             System.out.println("Return to Dashboard? (Y/N)");
             choice = myObj.nextLine();
-            if(choice.equals("Y") || choice.equals("y")){
+            if(choice.equals("Y") || choice.equals("y")) {
                 dashMenu();//return to dashboard.
             }
-            System.out.println("Do you wish to logout? Y or N");
-            choice = myObj.nextLine(); //get choice
+            }// end while choice loop
 
-        } // end while choice loop
-
+        // Update/write to archive
+        catalog.archiveUsers(FILE_NAME, catalog.users);
         currUser.loginStatus = false;// logout currUser
-        //write data to archive.
-
-        catalog.archiveUsers(FILE_NAME, users);
-
-    }
+    } // End main()
 
     //Load data from json file into List<User> users
     private static void loadUsers(){
-        users = catalog.getUsers(FILE_NAME);
+        catalog.users = catalog.getUsers(FILE_NAME);
     }
 
     //in lieu of GUI, this will present a login for the user.
-    private static void loginMenu(){
+    /*private static void loginMenu(){
         //TODO: implement loginMenu and call in main
-    }
+        // May have to implement in later release.
+    }*/
 
     //in lieu of GUI, this will present a dashboard for the user.
     private static void dashMenu() {
@@ -148,12 +143,14 @@ public class App {
                 "*Remove List (4).\n" +
                 "*Remove Task (5).\n" +
                 "*Move Task (6).\n" +
-                "*Logout (7).\n");
+                /*"*Create Sublist (7).\n" +
+                "*Create Subtask (8).\n" +*/
+                "*Mark Task Complete (9).\n" +
+                "*Logout (10).\n");
         String menu = myObj.nextLine(); // get user input
 
-        String tmpName, tmpTskName, tmpDesc, choice;
+        String tmpLiName, tmpTskName, tmpDesc, tmpSubLiName, tmpSubTskName;
         switch (menu) {
-            //TODO: just make some global vars up here
             case "1": //View Lists
                 currUser.displayLists();
 
@@ -163,66 +160,178 @@ public class App {
                 TDList templi;
                 //get list name & desc
                 System.out.println("Please enter list name: ");
-                tmpName = myObj.nextLine(); //get list name
+                tmpLiName = myObj.nextLine(); //get list name
                 System.out.println("Please enter list desc: ");
                 tmpDesc = myObj.nextLine(); //get description
-                currUser.createList(tmpName, tmpDesc);
+                currUser.createList(tmpLiName, tmpDesc);
                 templi = currUser.lastList();
                 //TODO: mess with display? call function?
                 System.out.println("Your new list is: " + templi.listName );
-                /*System.out.println("Return to Dashboard? (Y/N)");
-                choice = myObj.nextLine();
-                if(choice.equals("Y") || choice.equals("y")){
-                    dashMenu();//return to dashboard.
-                }*/
+
                 break;
 
             case "3": //Add new task
                 //get list name & desc
-                System.out.println("Please enter name of list to add task to: ");
-                tmpName = myObj.nextLine(); //get list name
-                System.out.println("Please enter task name: ");
-                tmpTskName = myObj.nextLine(); //get task name
-                System.out.println("Please enter task desc: ");
-                tmpDesc = myObj.nextLine(); //get description
-                currUser.createTask(tmpName, tmpTskName, tmpDesc);
-                System.out.println("Your new tasks for,");
-                currUser.displayTasks(tmpName);
-                System.out.println("Return to Dashboard? (Y/N)");
-                choice = myObj.nextLine();
-                if(choice.equals("Y") || choice.equals("y")){
-                    dashMenu();//return to dashboard.
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {
+                    System.out.println("Add a Task to a List.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to add task to: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    System.out.println("Please enter task name: ");
+                    tmpTskName = myObj.nextLine(); //get task name
+                    System.out.println("Please enter task desc: ");
+                    tmpDesc = myObj.nextLine(); //get description
+                    currUser.createTask(tmpLiName, tmpTskName, tmpDesc);
+                    System.out.println("Your new task for, " + tmpLiName + " is:");
+                    currUser.displayLastTask(tmpLiName);
+                } else {
+                    System.out.println("You do not currently have any lists.");
                 }
+                // TODO: is this displayTasks right? **********
+                //currUser.displayTasks(tmpLiName);
+
                 break;
 
-            case "4": //Remove list
-                System.out.println("Please enter name of list to remove: ");
-                tmpName = myObj.nextLine(); //get list name
-                currUser.removeList(tmpName);
+            case "4": //Remove list TODO: add output to this.
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {
+                    System.out.println("Remove a List.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to remove: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    currUser.removeList(tmpLiName);
+                } else {
+                    System.out.println("You do not currently have any lists.");
+                }
+
                 break;
 
             case "5": //Remove task
-                System.out.println("Please enter name of list to remove task from: ");
-                tmpName = myObj.nextLine(); //get list name
-                System.out.println("Please enter task name: ");
-                tmpTskName = myObj.nextLine(); //get task name
-                currUser.removeTask(tmpName, tmpTskName);
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {
+                    System.out.println("Remove a Task.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to remove task from: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    if (currUser.getListByName(tmpLiName).tasks != null) {
+                        System.out.println("The tasks for that list are: ");
+                        currUser.displayTasks(tmpLiName);
+                        System.out.println("Please enter task name you wish to move: ");
+                        tmpTskName = myObj.nextLine(); //get task name
+                        currUser.removeTask(tmpLiName, tmpTskName);
+                    }else {
+                        System.out.println("That list does not currently have any tasks.");
+                    }
+                }else {
+                    System.out.println("You do not currently have any lists or Tasks.");
+                }
+                
                 break;
 
             case "6": //Move task from one list to another.
-                System.out.println("Please enter name of list to move task from: ");
-                tmpName = myObj.nextLine(); //get list name
-                System.out.println("Please enter task name: ");
-                tmpTskName = myObj.nextLine(); //get task name
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {//TODO: check for min 2 lists and tasks?
+                    System.out.println("Move task from one list to another.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to move task from: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    TDList tmpTDL = currUser.getListByName(tmpLiName);
+                    System.out.println("The tasks for your list are: ");
+                    tmpTDL.displayTaskNames();
+                    System.out.println("Please enter name of task to move: ");
+                    tmpTskName = myObj.nextLine(); //get task name
+                    Task tmpTsk = tmpTDL.getTaskByName(tmpTskName);
+                    // Have to remove task first.
+                    currUser.removeTask(tmpLiName, tmpTskName);
+                    System.out.println("Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to move task to: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    // Creating same task in list given by user.
+                    currUser.createTask(tmpLiName, tmpTskName, tmpTsk.getTaskDesc());
+                    System.out.println("Your task has been moved.");
+                }else {
+                    System.out.println("You do not currently have any lists or Tasks.");
+                }
+                // TODO: if time, display task in new list
                 break;
 
-            case "7": //Logout
-                System.out.println("Are you sure you wish to logout? (Y/N)");
-                choice = myObj.nextLine();
-                if(choice.equals("Y") || choice.equals("y")){
-                    System.out.println("You are now logged out, thank you.");
-                    exit(0);
+            /*case "7": // Create Sublist which is part of a TDList TODO: needs testing
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {
+                    System.out.println("Create Sublist.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to add sublist to: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    //Sublist tmpSubList;
+                    //get list name & desc
+                    System.out.println("Please enter Sublist name: ");
+                    tmpSubLiName = myObj.nextLine(); //get Sublist name
+                    System.out.println("Please enter Sublist desc: ");
+                    tmpDesc = myObj.nextLine(); //get description
+                    currUser.createSubList(tmpLiName, tmpSubLiName, tmpDesc);
+                    *//*templi = currUser.lastList();
+                    //TODO: mess with display? call function?
+                    System.out.println("Your new list is: " + templi.listName );*//*
+                }else {
+                    System.out.println("You do not currently have any lists or Tasks.");
                 }
+                break;*/
+
+            /*case "8": // Create Subtask
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {//TODO: check for list and task?
+                    System.out.println("Create and add Subtask to Task.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to add subtask to: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    TDList tmpTDL = currUser.getListByName(tmpLiName);
+                    System.out.println("The tasks for your list are: ");
+                    tmpTDL.displayTaskNames();
+                    System.out.println("Please enter name of task to add subtask: ");
+                    tmpTskName = myObj.nextLine(); //get task name
+                    Task tmpTsk = tmpTDL.getTaskByName(tmpTskName);
+                }
+                break;*/
+
+            case "9": // Mark Task Complete
+                if(currUser.tdLists != null && !currUser.tdLists.isEmpty()) {
+                    System.out.println("Mark Task Complete.\n" +
+                            "***********************************\n\n" +
+                            "Your current lists are: ");
+                    currUser.displayListNames();
+                    System.out.println("Please enter name of list to mark task complete in: ");
+                    tmpLiName = myObj.nextLine(); //get list name
+                    TDList tmpTDL = currUser.getListByName(tmpLiName);
+                    System.out.println("The tasks for your list are: ");
+                    tmpTDL.displayTaskNames();
+                    System.out.println("Please enter name of task to mark complete: ");
+                    tmpTskName = myObj.nextLine(); //get task name
+                    // Set Task.completed to true.
+                    tmpTDL.getTaskByName(tmpTskName).completed = true;
+                    System.out.println(tmpTskName + " has been marked completed.");
+                }else {
+                    System.out.println("You do not currently have any lists or Tasks.");
+                }
+                break;
+
+            case "10": //Logout
+                System.out.println("Logging out...");
+
+                currUser.loginStatus = false;// logout currUser
+                catalog.archiveUsers(FILE_NAME, catalog.users);
+
+                System.out.println("You are now logged out, thank you.");
+
+                exit(0);
+
                 break;
 
             default:

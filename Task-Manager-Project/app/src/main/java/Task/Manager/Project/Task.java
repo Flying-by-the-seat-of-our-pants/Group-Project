@@ -8,12 +8,14 @@
 
 package Task.Manager.Project;
 
+import java.util.List;
+
 public class Task {
     protected String taskName;
     protected String taskDesc; //not in orig scope. Added by Dave McD.
-    protected Task subTask;
+    protected List<Subtask> subTask;
     protected boolean completed = false; //default false. Not in orig scope. Added by Dave McD.
-    //protected Task subTask;
+
     /***********************
      * Constructors
      * *********************/
@@ -26,9 +28,24 @@ public class Task {
         this.taskDesc = taskDesc;
     }
 
+    public Task(String taskName) {
+        this.taskName = taskName;
+    }
+
     /***********************
      * Getters
      * *********************/
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public String getTaskDesc() {
+        return taskDesc;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
 
     /***********************
      * Setters
@@ -40,7 +57,14 @@ public class Task {
     public void setTaskDesc(String taskDesc) {
         this.taskDesc = taskDesc;
     }
+
     /***********************
      * Methods
      * *********************/
+    public String displayComplete(){
+        if(this.completed){
+            return "* Completed.";
+        }
+        return "";
+    }
 }
