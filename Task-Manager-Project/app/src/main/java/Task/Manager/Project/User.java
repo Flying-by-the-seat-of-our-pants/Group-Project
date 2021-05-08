@@ -23,10 +23,10 @@ public class User {
     /***********************
      * Constructors
      * *********************/
-    public User(){/*intentionally empty*/};
+    public User(){/*intentionally empty*/}
 
     public User(String email, String userName, String password,
-                boolean loginStatus, List<TDList> tdLists /*, Date registerDate, int userID*/) {
+                boolean loginStatus, List<TDList> tdLists) {
         this.email = email;
         this.userName = userName;
         this.password = password;
@@ -106,10 +106,27 @@ public class User {
 
     }
 
+    /***********************
+     * List functions
+     * *********************/
+    //TODO: add functionality to add tasks here.
+    //TODO: is this the same as constructor?
+    protected void createList(String name, String description){
+        if(tdLists == null){
+            tdLists = new ArrayList<TDList>() {
+            };
+        }
+        tdLists.add(new TDList(name, description));
+    }
+
     protected void displayListNames(){
-        for (TDList tdl : tdLists) {
-            System.out.println("List: " +
-                    tdl.listName);
+        if(tdLists != null) {
+            for (TDList tdl : tdLists) {
+                System.out.println("List: " +
+                        tdl.listName);
+            }
+        } else {
+            System.out.println("You have no lists.");
         }
     }
 
@@ -117,20 +134,33 @@ public class User {
         if(loginStatus) {//user must be logged in.
             // TODO: add more output? Mess with format.
             System.out.println("Your Lists:");
-            for (TDList tdl : tdLists) {
-                System.out.println("List:" +
-                        tdl.listName);
-                if(tdl.tasks != null) {
-                    for (Task tsk : tdl.tasks) {
-                        System.out.println("\tTask: " +
-                                tsk.taskName);
-                    }
+            if (tdLists != null) {
+                for (TDList tdl : tdLists) {
+                    System.out.println("List:" +
+                            tdl.listName);
+                    /*if(tdl.subList != null) {
+                        for (Sublist subLst : tdl.subList) {
+                            System.out.println("\tSublist: " +
+                                    subLst.listName);
+                        }
                     System.out.println("\n");
+                }*/
+                    if (tdl.tasks != null && !tdl.tasks.isEmpty()) {
+                        for (Task tsk : tdl.tasks) {
+                            System.out.println("\tTask: " +
+                                    tsk.taskName + " " +
+                                    tsk.displayComplete());
+                            /*if(tsk.isCompleted()){
+                                System.out.println("Completed.");
+                            }*/
+                        }
+                        System.out.println("\n");
+                    } else if (tdl.tasks == null || tdl.tasks.isEmpty()) {
+                        System.out.println("No tasks.\n");
+                    }
                 }
-                else if(tdl.tasks == null){
-                    System.out.println("No tasks.\n");
-                }
-                //System.out.println("\n");
+            } else {
+                System.out.println("You have no lists.");
             }
         }
     }
@@ -145,69 +175,81 @@ public class User {
         return tdl;
     }
 
-    //TODO: add functionality to add tasks here.
-    //TODO: is this the same as constructor?
-    protected void createList(String name, String description){
-        if(tdLists == null){
-            tdLists = new ArrayList<TDList>() {
-            };
-        }
-        tdLists.add(new TDList(name, description));
-    }
-
     protected TDList getListByName(String name){
-        for (TDList tdl : tdLists) {//have to search all lists in tdLists
-            if (tdl.listName.equals(name)) {
-                return tdl;
+        if(tdLists != null) {
+            for (TDList tdl : tdLists) {//have to search all lists in tdLists
+                if (tdl.listName.equals(name)) {
+                    return tdl;
+                }
             }
         }
         return new TDList();
     }
 
     protected void removeList(String name) {
-        for (TDList tdl : tdLists) {//have to search all lists in tdLists
-            if (tdl.listName.equals(name)) {
-                System.out.println("Removing List: " + tdl.listName + "\n");
-                tdLists.remove(tdl);
-                break;
+        if (tdLists != null) {
+            for (TDList tdl : tdLists) {//have to search all lists in tdLists
+                if (tdl.listName.equals(name)) {
+                    System.out.println("Removing List: " + tdl.listName + "\n");
+                    tdLists.remove(tdl);
+                    break;
+                }
             }
         }
     }
-    protected void register(){
 
-    }
+    /***********************
+     * Sublist functions TODO: come back if time.
+     ***********************/
+   /* protected void createSubList(String listName, String subListName, String description){
+        if(tdLists != null) {
+            for (TDList tdl : tdLists) {//have to search all lists in tdLists
+                if (tdl.listName.equals(listName)) {
+                    tdl.subList = new List<Sublist>(subListName, description);
+                }
+            }
+        }
+    }*/
 
-    protected void createSubList(){
-
-    }
-//TODO: should this be moved to TDList class?
+    /***********************
+     * Task functions
+     ***********************/
+    //TODO: should this be moved to TDList class?
     protected void createTask(String liName, String name, String description){
         // Have to search tdList for list
-        for(TDList tdl : tdLists) {//have to search all lists in tdLists
-            if(tdl.listName.equals(liName)){
-                if(tdl.tasks == null){
-                    tdl.tasks = new ArrayList<Task>();
+        if (tdLists != null) {
+            for (TDList tdl : tdLists) {//have to search all lists in tdLists
+                if (tdl.listName.equals(liName)) {
+                    if (tdl.tasks == null) {
+                        tdl.tasks = new ArrayList<Task>();
+                    }
+                    tdl.tasks.add(new Task(name, description));
                 }
-                tdl.tasks.add(new Task(name, description));
             }
+        } else {
+            System.out.println("List name entered cannot be found.");
         }
     }
 
     // Needs list name where task is, and task name.
     protected void removeTask(String liName, String name){
         // Have to search tdList for list
-        for(TDList tdl : tdLists) {//have to search all lists in tdLists
-            if(tdl.listName.equals(liName)){
-                System.out.println("List exists! \n");
-                // Have to search task list for the task
-                for (Task tsk : tdl.tasks) {
-                    if(tsk.taskName.equals(name)) {
-                        System.out.println("Removing Task: " + tsk.taskName);
-                        tdl.tasks.remove(tsk);
-                        break;
+        if (tdLists != null) {
+            for (TDList tdl : tdLists) {//have to search all lists in tdLists
+                if (tdl.listName.equals(liName)) {
+                    // Have to search task list for the task
+                    for (Task tsk : tdl.tasks) {
+                        if (tsk.taskName.equals(name)) {
+                            System.out.println("Removing Task: " + tsk.taskName +
+                                    " from List: " + tdl.listName);
+                            tdl.tasks.remove(tsk);
+                            break;
+                        }
                     }
                 }
             }
+        } else {
+            System.out.println("List name entered cannot be found.");
         }
     }
 
@@ -216,32 +258,64 @@ public class User {
             //TODO: Check for null list
             // TODO: add more output? Mess with format.
             //System.out.println("Your Tasks:");
-            for (TDList tdl : tdLists) {
-                if(tdl.listName.equals(liName)) {
-                    if(tdl.tasks != null) {
-                        for (Task tsk : tdl.tasks) {
-                            System.out.println("Task: " +
-                                    tsk.taskName);
+            if (tdLists != null) {
+                for (TDList tdl : tdLists) {
+                    if (tdl.listName.equals(liName)) {
+                        if (tdl.tasks != null) {
+                            for (Task tsk : tdl.tasks) {
+                                System.out.println("Task: " +
+                                        tsk.taskName);
+                            }
+                            System.out.println("\n");
+                        } else if (tdl.tasks == null) {
+                            System.out.println("No tasks.\n");
                         }
-                        System.out.println("\n");
-                    }
-                    else if(tdl.tasks == null){
-                        System.out.println("No tasks.\n");
                     }
                 }
+            } else {
+                System.out.println("List name entered cannot be found.");
             }
             System.out.println("\n");
         }
     }
 
     protected void displayLastTask(String liName) {//not in orig scope. Added by Dave McD.
-        for (TDList tdl : tdLists) {
-            if(tdl.listName.equals(liName)) {
-                System.out.println("Task: " +
-                        tdl.tasks.get(tdl.tasks.size() - 1));
-            }
+        if (tdLists != null) {
+            for (TDList tdl : tdLists) {
+                if (tdl.listName.equals(liName) && tdl.tasks != null) {
+                    System.out.println("Task: " +
+                            tdl.tasks.get(tdl.tasks.size() - 1));
+                }
 
+            }
         }
 
     }
+
+    /***********************
+     * Subtask functions TODO: come back to if time.
+     ***********************/
+    /*protected void createSubTask(String liName, String tskName, String name, String description){
+        // Have to search tdList for list
+        if (tdLists != null) {
+            for (TDList tdl : tdLists) {//have to search all lists in tdLists
+                if (tdl.listName.equals(liName)) {
+                    if (tdl.tasks != null  && !tdl.tasks.isEmpty()) {
+                        for(Task tsk : tdl.tasks){
+                            if (tsk.taskName.equals(tskName)){
+                                if (tsk.subTask == null) {
+                                    tsk.subTask = new List<Subtask>();
+                                }
+                            }
+                        }
+
+                    }
+                    tdl.tasks.add(new Task(name, description));
+                }
+            }
+        } else {
+            System.out.println("List name entered cannot be found.");
+        }
+    }*/
+
 }

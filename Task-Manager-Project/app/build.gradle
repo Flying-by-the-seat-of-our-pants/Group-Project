@@ -67,7 +67,7 @@ dependencies {
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
-    // JUnit Test frameork
+    // JUnit Test framework
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.5.2"
     testRuntime "org.junit.platform:junit-platform-runner:1.5.2"
 

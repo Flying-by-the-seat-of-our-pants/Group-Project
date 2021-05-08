@@ -12,10 +12,10 @@ import java.util.List;
 
 public class TDList {
     protected String listName;
-    //protected int listID;
+    //protected int listID; // did not need
     protected String listDesc;
     protected List<Task> tasks;
-    protected TDList subList;
+    protected List<Sublist> subList;
 
     /***********************
      * Constructors
@@ -79,9 +79,7 @@ public class TDList {
     /***********************
      * Methods
      * *********************/
-    public void appendTask(){
 
-    }
     protected void displayTaskNames(){
         for (Task task : tasks) {
             System.out.println("Task:" +

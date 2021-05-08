@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class UserTest {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AdminTest extends UserTest{ // Is this needed when Admin extends User??
 
     @Test
     public void testIsEmpty() {
@@ -18,23 +20,6 @@ public class UserTest {
         assertFalse(list.isEmpty());
         list.remove(0);
         assertTrue(list.isEmpty());
-    }
-
-    @Test
-    public void TestListTDList(){
-        TDList listOne = new TDList("list1");
-        TDList listTwo = new TDList("list2");
-        TDList listThree = new TDList("list3");
-
-
-        List<TDList> list = new ArrayList<>();
-        list.add(listOne);
-        list.add(listTwo);
-        list.add(listThree);
-        assertEquals(listOne, list.get(0));
-        assertEquals(listTwo, list.get(1));
-        assertEquals(listThree, list.get(2));
-
     }
 
     @BeforeEach

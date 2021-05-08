@@ -16,12 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Functionality for Registering a new User.
 - displayLastTask in User class.
 - More display output for Users in Main.
+- Class Sublist
+- Class Subtask
 
 ### Changed
 
 - Fixed Null Pointer Exception in displayLists function.
 - Fixed some issues with Registering a new User.
 - Fixed some issues with displayTask.
+- Updated README.md
+- Removed Users Class, moved functionality to Catalog Class
 
 
 

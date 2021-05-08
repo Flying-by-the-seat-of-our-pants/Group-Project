@@ -21,9 +21,7 @@ import java.util.List;
 
 public class Catalog {
     private final Gson gson;
-    private List<User> usersList; // to keep track of all users
-    private User usr;
-
+    protected List<User> users; // to keep track of all users
 
     /***********************
      * Constructors
@@ -35,29 +33,18 @@ public class Catalog {
     /***********************
      * Methods
      * *********************/
-    //TODO: need: search(), insert(), getUsers(): Iterator
-    //TODO: addUser(),
     boolean userExists(String userName){
-        if(this.usersList.contains(userName)){
-            return true;
-        }
-        else return false;
+        return this.users.contains(userName);
     }
 
     int findUser(String userName){// any unique id will do.
-        /*if(this.userExists(userName)){*/
-        //returns -1 if not found
-        return usersList.indexOf(userName);
-
-        /*}
-        else{
-            return -1;
-        }*/
+        return users.indexOf(userName);
     }
 
     protected void addUser(User newUser){
-        usersList.add(newUser);
+        users.add(newUser);
     }
+
     // Reads in data from json file, puts it into list of User objects
     public List<User> getUsers(String archiveFile){
         String json = "";

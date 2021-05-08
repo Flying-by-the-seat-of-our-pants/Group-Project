@@ -9,18 +9,21 @@
 package Task.Manager.Project;
 
 public class Admin extends User{
+    protected boolean isAdmin;
     /***********************
      * Constructors
      *********************/
 
     public Admin(String email, String userName, String password,
-                boolean loginStatus/*, Date registerDate, int userID*/){
-         super(email, userName, password, loginStatus);
+                  boolean isAdmin){
+         super(email, userName, password);
+        this.isAdmin = isAdmin;
     }
 
     public Admin(String email, String userName, String password) {
        super(email, userName, password);
     }
+
     /***********************
      * Methods
      *********************/
@@ -29,4 +32,18 @@ public class Admin extends User{
         return true;
     }
 
+    protected boolean verifyLogin(String usrName, String psWord, boolean logStat, boolean isAdmin) {
+        if (usrName.equals(this.userName) &&
+                psWord.equals(this.password) &&
+                !logStat && this.isAdmin) {
+            //correct userName, passWord and not already logged in
+            this.loginStatus = true;
+            /*System.out.println("Thank you, you are now logged in.\n");*/
+            return true;
+        } else {
+            /*System.out.println("You have entered incorrect information.");*/
+            return false;
+        }
+
+    }
 }
